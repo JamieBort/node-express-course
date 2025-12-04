@@ -1,14 +1,14 @@
-console.log('Express Tutorial')
-
 const express = require('express'); // Import the Express module
 const app = express(); // Create an Express application instance
 const port = 3000; // Define the port number
 const { products } = require("./data");
 
+// We want this BEFORE any route handlers.
 app.use(express.static("./public"));
 
 // Define a route for the root URL (/)
 app.get('/api/v1/test', (req, res) => {
+  console.log('The /api/v1/test endpoint');
 //   res.send('Hello World from Express!'); // Send a response to the client
   const payload = { message: "It worked!" };
   console.log(payload)
@@ -16,10 +16,25 @@ app.get('/api/v1/test', (req, res) => {
 });
 
 app.get('/api/v1/products',(req, res) => {
+  console.log('The /api/v1/products endpoint');
     res.json(products);
 });
 
+// Trigger an error
+app.get('/api/v1/productx', (req, res, next) => {
+  console.log('The /api/v1/productx endpoint');
+  try {
+    // Simulate some logic that may throw an error
+    const error = new Error('Database connection failed');
+    throw error; // Throw an error
+  } catch (err) {
+    next(err); // Pass the error to the error-handling middleware
+  }
+});
+
+
 app.get('/api/v1/product/:productID',(req, res) => {
+  console.log('The /api/v1/product/:productID endpoint');
     const idToFind = parseInt(req.params.productID); 
     const product = products.find((p) => p.id === idToFind);
      // If not found, return 404 JSON
@@ -30,6 +45,7 @@ app.get('/api/v1/product/:productID',(req, res) => {
 });
 
 app.get("/api/v1/query", (req, res) => {
+  console.log('The /api/v1/query endpoint');
   const { search, regex, limit, maxPrice } = req.query;
 
   let result = [...products];
@@ -67,40 +83,35 @@ app.get("/api/v1/query", (req, res) => {
   res.json(result);
 });
 
-
-
-
-
-
-
-// app.get("/api/v1/query", (req, res) => {
-//   const { search, limit } = req.query;
-
-//   let sortedProducts = [...products];
-
-//   // If search was provided, filter by product name starting with that string
-//   if (search) {
-//     sortedProducts = sortedProducts.filter(product => {
-//       return product.name.toLowerCase().startsWith(search.toLowerCase());
-//     });
-//   }
-
-//   // If limit was provided, convert it to a number and slice the array
-//   if (limit) {
-//     sortedProducts = sortedProducts.slice(0, Number(limit));
-//   }
-
-//   res.json(sortedProducts);
-// });
-
-
 app.all('/secret', (req, res, next) => {
-  console.log('Accessing the secret section...');
+  console.log('The /secret endpoint');
   // Perform authentication, logging, or other shared logic here
+  console.log('Accessing the secret section...');
     const payload = 'Hello the Secret page!';
     console.log(payload)
     res.send(payload); // Send a response to the client
-  next(); // Pass control to the next handler
+  // next(); // Pass control to the next handler. NOT needed in this file.
+});
+
+// Your normal routes and middleware go here...
+
+// Error-handling middleware should be defined after all your routes
+app.use((err, req, res, next) => {
+  console.error(err.stack); // Log the error stack to the console for debugging
+
+  // If the error is an instance of a custom error class or contains specific properties, handle accordingly
+  if (err.isCustomError) {
+    return res.status(err.statusCode || 500).json({
+      message: err.message || 'Something went wrong!',
+      details: err.details || 'No additional details provided.'
+    });
+  }
+
+  // Default error response for unhandled errors
+  res.status(500).json({
+    message: 'Internal Server Error',
+    details: err.message || 'Something went wrong, please try again later.'
+  });
 });
 
 // Start the server and listen for incoming requests on the specified port

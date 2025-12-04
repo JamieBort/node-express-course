@@ -43,10 +43,27 @@
         const list = document.createElement("ul");
 
         data.forEach(product => {
-          const item = document.createElement("li");
-          item.textContent = `${product.name} — $${product.price}`;
-          list.appendChild(item);
-        });
+    const item = document.createElement("li");
+
+    // Product text: name and price
+    const text = document.createTextNode(`${product.name} — $${product.price} `);
+
+    // Create an anchor element pointing to the product's page
+    const anchor = document.createElement("a");
+    anchor.href = `http://localhost:3000/api/v1/product/${product.id}`;
+    anchor.textContent = "View Details";
+    anchor.setAttribute("aria-label", `View details for ${product.name}`);
+
+    // Append product text + button to the <li>
+    item.appendChild(text);
+    //   item.appendChild(btn);
+
+    // Append the anchor to the list item
+    item.appendChild(anchor);
+
+    // Add the <li> to the <ul> list
+    list.appendChild(item);
+    });
 
         // Replace loading text with the list
         container.textContent = "";
