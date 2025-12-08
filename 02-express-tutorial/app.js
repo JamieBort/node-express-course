@@ -1,24 +1,79 @@
 const express = require('express'); // Import the Express module
 const app = express(); // Create an Express application instance
 const port = 3000; // Define the port number
-const { products } = require("./data");
+// const { products, people } = require("./data");
+const peopleRouter = require("./routes/people");
+
+// Global Middleware (like parsers, logging, authentication, etc.) should be defined before routes to ensure they run for all requests.
+
+// Middleware to parse incoming request bodies
+app.use(express.urlencoded({ extended: false })); // For parsing form data
+app.use(express.json()); // For parsing JSON data
+
+// Middleware for logging
+const logger = (req, res, next) => {
+  // console.log("start");
+  const all = req;
+  const method = req.method;
+  const url = req.url;
+  const time = new Date();
+  // console.log(all);
+  console.log(method, url, time);
+  // console.log("end");
+  next();
+}
+
+// logger() middleware invoked via an app.use() statement
+// app.use(['/api/v1/products', '/secret'], logger);
+
+// Route-specific middleware (if any) goes before the actual route handlers for specific routes.
+
+app.use("/api/v1/people", peopleRouter);
 
 // We want this BEFORE any route handlers.
 app.use(express.static("./public"));
+// app.use(express.static("./methods-public"));
+
+// Route handlers are usually defined after the middleware that they should be processed through.
 
 // Define a route for the root URL (/)
-app.get('/api/v1/test', (req, res) => {
-  console.log('The /api/v1/test endpoint');
+// NOTE: logger() is invoked by inserting it into the route statement
+app.get('/api/v1/test', logger, (req, res) => {
+  // console.log('The /api/v1/test endpoint');
 //   res.send('Hello World from Express!'); // Send a response to the client
   const payload = { message: "It worked!" };
   console.log(payload)
   res.json(payload);
 });
 
+// GET endpoint for products
 app.get('/api/v1/products',(req, res) => {
   console.log('The /api/v1/products endpoint');
     res.json(products);
 });
+
+// // GET endpoint for people
+// app.get('/api/v1/people',(req, res) => {
+//   console.log('The /api/v1/people endpoint');
+//     res.json(people);
+// });
+
+// // POST endpoint for adding a new person
+// app.post('/api/v1/people', (req, res) => {
+//   const { name } = req.body; // Extract name from the request body
+
+//   // Check if name is provided
+//   if (!name) {
+//     return res.status(400).json({ success: false, message: "Please provide a name" });
+//   }
+
+//   // Add the new person to the array with a new ID
+//   const newPerson = { id: people.length + 1, name };
+//   people.push(newPerson);
+
+//   // Respond with success message and the new person's data
+//   res.status(201).json({ success: true, name , message: `Your name, ${name} was added.`});
+// });
 
 // Trigger an error
 app.get('/api/v1/productx', (req, res, next) => {
@@ -93,7 +148,7 @@ app.all('/secret', (req, res, next) => {
   // next(); // Pass control to the next handler. NOT needed in this file.
 });
 
-// Your normal routes and middleware go here...
+// Error-handling middleware goes last, after all routes and other middleware.
 
 // Error-handling middleware should be defined after all your routes
 app.use((err, req, res, next) => {
