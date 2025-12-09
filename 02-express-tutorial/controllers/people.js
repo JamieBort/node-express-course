@@ -1,4 +1,6 @@
-const { json } = require("express");
+// ./controllers/people.js
+
+const { json } = require("express"); // Is this used?
 const { people } = require("./../data");
 
 const getPeople = (req, res) => {
