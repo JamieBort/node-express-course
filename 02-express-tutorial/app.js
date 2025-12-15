@@ -17,7 +17,7 @@ app.use(cookieParser()); // Use cookie parser middleware
 // Middleware for logging
 const logger = (req, res, next) => {
   // console.log("start");
-  const all = req;
+  // const all = req;
   const method = req.method;
   const url = req.url;
   const time = new Date();
@@ -27,10 +27,13 @@ const logger = (req, res, next) => {
   next();
 }
 
-app.use("/api/v1/people", peopleRouter);
+// Middleware for using the peopleRouter
+app.use("/api/v1/people", logger, peopleRouter);
 
+// Middleware for using the productRouter
 app.use("/api/v1/products", productsRouter);
 
+// Middleware for using the authentication
 app.use("/authenticate", authentication);
 
 // We want this BEFORE any route handlers.
@@ -43,7 +46,7 @@ app.use(express.static("./public"));
 // NOTE: logger() is invoked by inserting it into the route statement
 app.get('/api/v1/test', logger, (req, res) => {
   // console.log('The /api/v1/test endpoint');
-//   res.send('Hello World from Express!'); // Send a response to the client
+  //   res.send('Hello World from Express!'); // Send a response to the client
   const payload = { message: "It worked!" };
   console.log(payload)
   res.json(payload);
@@ -61,74 +64,15 @@ app.get('/api/v1/productx', (req, res, next) => {
   }
 });
 
-// // // Product Routes
-
-// // GET endpoint for products
-// app.get('/api/v1/products',(req, res) => {
-//   console.log('The /api/v1/products endpoint');
-//     res.json(products);
-// });
-
-// // Get one product by ID
-// app.get('/api/v1/product/:productID',(req, res) => {
-//   console.log('The /api/v1/product/:productID endpoint');
-//     const idToFind = parseInt(req.params.productID); 
-//     const product = products.find((p) => p.id === idToFind);
-//      // If not found, return 404 JSON
-//     if (!product) {
-//         return res.status(404).json({ message: "That product was not found." });
-//     }
-//     res.json(product);
-// });
-
-// // Get one product by search
-// app.get("/api/v1/query", (req, res) => {
-//   console.log('The /api/v1/query endpoint');
-//   const { search, regex, limit, maxPrice } = req.query;
-
-//   let result = [...products];
-
-//   // 1. Handle "search" — names starting with provided letters
-//   if (search) {
-//     result = result.filter(product =>
-//       product.name.toLowerCase().startsWith(search.toLowerCase())
-//     );
-//   }
-
-//   // 2. Handle "regex" — names matching a regular expression
-//   // Example call: /api/v1/query?regex=^a.*e$
-//   if (regex) {
-//     try {
-//       const pattern = new RegExp(regex, "i"); // case-insensitive
-//       result = result.filter(product => pattern.test(product.name));
-//     } catch (err) {
-//       return res.status(400).json({ message: "Invalid regex pattern." });
-//     }
-//   }
-
-//   // 3. Filter by maxPrice — only products cheaper than given price
-//   // Example: /api/v1/query?maxPrice=20
-//   if (maxPrice) {
-//     const priceLimit = Number(maxPrice);
-//     result = result.filter(product => product.price <= priceLimit);
-//   }
-
-//   // 4. Apply limit — return ONLY the first N products
-//   if (limit) {
-//     result = result.slice(0, Number(limit));
-//   }
-
-//   res.json(result);
-// });
 
 // Route to secret page
 app.all('/secret', (req, res, next) => {
   console.log('The /secret endpoint');
   // Perform authentication, logging, or other shared logic here
   console.log('Accessing the secret section...');
-    const payload = 'Hello the Secret page!';
-    console.log(payload)
-    res.send(payload); // Send a response to the client
+  const payload = 'Hello the Secret page!';
+  console.log(payload)
+  res.send(payload); // Send a response to the client
   // next(); // Pass control to the next handler. NOT needed in this file.
 });
 

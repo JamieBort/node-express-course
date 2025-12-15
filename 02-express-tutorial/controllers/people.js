@@ -10,7 +10,7 @@ const getPeople = (req, res) => {
 
 const getPerson = (req, res) => {
   console.log('The /api/v1/product/:productID endpoint CHANGE THIS');
-    const personToFind = parseInt(req.params.personID); 
+  const personToFind = parseInt(req.params.personID);
     const person = people.find((p) => p.id === personToFind);
      // If not found, return 404 JSON
     if (!person) {
@@ -42,8 +42,8 @@ const addPerson =  (req, res) => {
 };
 
 const deletePerson =  (req, res) => {
-  const id = parseInt(req.params.personID); 
-  
+  const id = parseInt(req.params.personID);
+
   // Check if the person is in the array.
   does_person_exist = people.some(person => person.id === id);
   if (!does_person_exist) {
@@ -51,8 +51,8 @@ const deletePerson =  (req, res) => {
   };
 
   // Remove the person from the array
-  const updatedPeople = people.filter(person => person.id !== id); 
-  // // Use 204 if you do not need to return a response body after the deletion.
+  const updatedPeople = people.filter(person => person.id !== id);
+  // Use 204 if you do not need to return a response body after the deletion.
   // res.status(204).json({ message: "That person was successfully removed.",updatedPeople});
   // Use 200 if you want to send a response body (like the updated list of people) with a successful delete request.
   res.status(200).json({ message: "That person was successfully removed.",updatedPeople});
