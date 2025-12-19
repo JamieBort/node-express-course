@@ -7,10 +7,6 @@ const connectDB = require('./db/connect');
 require('dotenv').config();
 
 
-// const connectionString = `mongodb+srv://jamiebort:<db_password>@node-express-projects.y12utui.mongodb.net/?appName=Node-Express-Projects`;
-
-const connectionString = `mongodb+srv://jamiebort:<db_password>@node-express-projects.y12utui.mongodb.net/?appName=Node-Express-Projects`;
-
 // middleware
 
 app.use(express.json());

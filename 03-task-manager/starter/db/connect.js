@@ -11,7 +11,7 @@ const options = { // Added as a result of output warnings from when the db was f
 //     console.log(error);
 // });
 
-const connectDB = (url) => mongoose.connect(url, options).then(() => console.log("Connected to the database.")).catch((error) => {
+const connectDB = (url) => mongoose.connect(url, options).then(() => console.log(`Connected to the ${mongoose.connection.name} database.`)).catch((error) => {
     console.log(`There was an error connecting to the database.`);
     console.log(error);
 });
