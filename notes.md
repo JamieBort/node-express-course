@@ -1,0 +1,1 @@
+I am following this [Configuring ESLint, Prettier, and TypeScript Together](https://www.joshuakgoldberg.com/blog/configuring-eslint-prettier-and-typescript-together/) article which is also found here logseq://graph/Digital-Knowledge-Base?block-id=6959c7a4-be0d-477e-9552-1ce4440ae121
