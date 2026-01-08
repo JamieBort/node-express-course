@@ -12,6 +12,11 @@ export default defineConfig([
 		plugins: { js },
 		extends: ["js/recommended"],
 		languageOptions: { globals: globals.node },
+		rules: {
+			"no-console": "error", // catch console.log
+			"no-unused-vars": "error", // catch unused variables
+			// "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }] // ignore unused function args starting with _
+		},
 	},
 	{ files: ["**/*.js"], languageOptions: { sourceType: "commonjs" } },
 ]);
