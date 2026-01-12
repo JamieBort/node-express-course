@@ -1,4 +1,6 @@
-const mongoose = require('mongoose')
+// Used to connect to the database.
+
+const mongoose = require("mongoose");
 const options = {
 	// Added as a result of output warnings from when the db was first successfully connected.
 	useNewUrlParser: true,
@@ -21,5 +23,4 @@ const connectDB = (url) =>
 			/* eslint-enable no-console */
 		});
 
-
-module.exports = connectDB
+module.exports = connectDB;
