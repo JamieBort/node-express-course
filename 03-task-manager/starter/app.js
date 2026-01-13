@@ -20,14 +20,17 @@ const port = process.env.PORT || 3000;
 
 const start = async () => {
     try {
-        await connectDB(process.env.MONGO_URI);
-        app.listen(port, () =>
-            console.log(`Server is listening on port ${port}...`)
-        );
-    } catch (error) {
-        console.log(`There was an error starting the app.`);
-        console.log(error);
-    }
+			await connectDB(process.env.MONGO_URI);
+			app.listen(port, () =>
+				// eslint-disable-next-line no-console
+				console.log(`Server is listening on port ${port}...`),
+			);
+		} catch (error) {
+			// eslint-disable-next-line no-console
+			console.log(`There was an error starting the app.`);
+			// eslint-disable-next-line no-console
+			console.log(error);
+		}
 };
 
 start();
