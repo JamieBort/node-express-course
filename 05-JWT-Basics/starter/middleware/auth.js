@@ -15,16 +15,19 @@ const authenticationMiddleware = async (req, res, next) => {
 	}
 
 	const token = authHeader.split(" ")[1]; // Extract the token from the header
+	// eslint-disable-next-line no-console
+	console.log(token);
 
+	// Verify token is valid.
 	try {
-		const decoded = jwt.verify(token, process.env.JWT_SECRET); // Verify token
+		const decoded = jwt.verify(token, process.env.JWT_SECRET);
 		const { id, username } = decoded; // Extract payload
 		req.user = { id, username }; // Attach user info to request
 		next(); // Proceed to next middleware/route handler
 	} catch (error) {
 		// eslint-disable-next-line no-console
 		console.log(error); // Log error for debugging
-		throw new UnauthenticatedError("Not authorized to access this route"); // Throw error if invalid
+		throw new UnauthenticatedError("Not authorized to access this route"); // Throw error if the token is invalid
 	}
 };
 

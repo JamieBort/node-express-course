@@ -16,7 +16,7 @@ const login = async (req, res) => {
 
 	// If either username or password is missing, throw a validation error
 	if (!username || !password) {
-		throw new BadRequestError("Please provide email and password");
+		throw new BadRequestError("Please provide username and password");
 	}
 
 	// DEMO ONLY: Generate a fake user ID using the current day of the month
@@ -24,19 +24,17 @@ const login = async (req, res) => {
 	const id = new Date().getDate();
 
 	// Create a JWT token with a small payload (id and username)
-	// process.env.JWT_SECRET is the secret key used to sign the token
-	// expiresIn defines how long the token remains valid
 	const token = jwt.sign(
 		{ id, username }, // Payload data stored inside the token
-		process.env.JWT_SECRET, // Secret key used to sign the token
+		process.env.JWT_SECRET, // process.env.JWT_SECRET is the secret key used to sign the token. Secret key used to sign the token
 		{
-			expiresIn: "30d", // Token expiration time
+			expiresIn: "30d", // expiresIn defines how long the token remains valid. Token expiration time
 		},
 	);
 
 	// Send a success response with the generated JWT token
 	res.status(200).json({ msg: "user created", token });
-};;
+};
 
 // Controller function for a protected dashboard route
 const dashboard = async (req, res) => {
